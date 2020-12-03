@@ -2,7 +2,6 @@
 
 set -euo pipefail
 
-# TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for babashka.
 GH_REPO="https://github.com/borkdude/babashka"
 
 fail() {
@@ -29,8 +28,6 @@ list_github_tags() {
 }
 
 list_all_versions() {
-  # TODO: Adapt this. By default we simply list the tag names from GitHub releases.
-  # Change this function if babashka has other means of determining installable versions.
   list_github_tags
 }
 
@@ -39,8 +36,12 @@ download_release() {
   version="$1"
   filename="$2"
 
-  # TODO: Adapt the release URL convention for babashka
-  url="$GH_REPO/archive/v${version}.tar.gz"
+  case "$(uname -s)" in
+    Linux*) platform=linux ;;
+    Darwin*) platform=macos ;;
+  esac
+
+  url="$GH_REPO/releases/download/v$version/babashka-$version-$platform-amd64.zip"
 
   echo "* Downloading babashka release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -55,17 +56,15 @@ install_version() {
     fail "asdf-babashka supports release installs only"
   fi
 
-  # TODO: Adapt this to proper extension and adapt extracting strategy.
-  local release_file="$install_path/babashka-$version.tar.gz"
+  local release_file="$install_path/babashka-$version.zip"
   (
-    mkdir -p "$install_path"
+    mkdir -p "$install_path/bin"
     download_release "$version" "$release_file"
-    tar -xzf "$release_file" -C "$install_path" --strip-components=1 || fail "Could not extract $release_file"
+    unzip "$release_file" -d "$install_path/bin" || fail "Could not extract $release_file"
     rm "$release_file"
 
-    # TODO: Asert babashka executable exists.
     local tool_cmd
-    tool_cmd="$(echo "bb --version" | cut -d' ' -f2-)"
+    tool_cmd="bb"
     test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
 
     echo "babashka $version installation was successful!"
