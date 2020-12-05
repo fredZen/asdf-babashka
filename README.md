@@ -17,7 +17,6 @@
 # Dependencies
 
 - `bash`, `curl`, `tar`: generic POSIX utilities.
-- `SOME_ENV_VAR`: set this environment variable in your shell config to load the correct version of tool x.
 
 # Install
 
@@ -56,4 +55,5 @@ Contributions of any kind welcome! See the [contributing guide](contributing.md)
 
 # License
 
-See [LICENSE](LICENSE) © [Frederic Merizen](https://github.com/fredZen/)
+Distributed under the [Eclipse Public License](LICENSE), the same as Babashka.
+© [Frederic Merizen](https://github.com/fredZen/)
