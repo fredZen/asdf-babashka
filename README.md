@@ -22,9 +22,7 @@
 Plugin:
 
 ```shell
-asdf plugin add babashka
-# or
-asdf plugin add https://github.com/fredZen/asdf-babashka.git
+asdf plugin add babashka https://github.com/fredZen/asdf-babashka.git
 ```
 
 babashka:
