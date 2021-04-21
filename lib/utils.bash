@@ -32,19 +32,23 @@ list_all_versions() {
 }
 
 download_release() {
-  local version filename url
-  version="$1"
-  filename="$2"
+  local version="$1"
+  local filename="$2"
 
   case "$(uname -s)" in
     Linux*) platform=linux ;;
     Darwin*) platform=macos ;;
   esac
 
-  url="$GH_REPO/releases/download/v$version/babashka-$version-$platform-amd64.tar.gz"
+  >&2 echo "* Downloading babashka release $version..."
 
-  echo "* Downloading babashka release $version..."
-  curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
+  local ext url
+  for ext in tar.gz zip; do
+    url="$GH_REPO/releases/download/v$version/babashka-$version-$platform-amd64.$ext"
+    curl "${curl_opts[@]}" -o "$filename.$ext" -C - "$url" >& /dev/null && echo $ext && return
+  done
+
+  fail "Could not download $url"
 }
 
 install_version() {
@@ -56,12 +60,17 @@ install_version() {
     fail "asdf-babashka supports release installs only"
   fi
 
-  local release_file="$install_path/babashka-$version.zip"
+  local release_file="$install_path/babashka-$version"
   (
     mkdir -p "$install_path/bin"
-    download_release "$version" "$release_file"
-    tar -xzf "$release_file" --directory "$install_path/bin" || fail "Could not extract $release_file"
-    rm "$release_file"
+    local ext=$(download_release "$version" "$release_file")
+
+    case "$ext" in
+      tar.gz) tar -xzf "$release_file.$ext" --directory "$install_path/bin" || fail "Could not extract $release_file.$ext" ;;
+      zip) unzip "$release_file.$ext" -d "$install_path/bin" || fail "Could not extract $release_file.$ext" ;;
+    esac
+
+    rm "$release_file.$ext"
 
     local tool_cmd
     tool_cmd="bb"
