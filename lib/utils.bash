@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-GH_REPO="https://github.com/borkdude/babashka"
+GH_REPO="https://github.com/babashka/babashka"
 
 fail() {
   echo -e "asdf-babashka: $*"
