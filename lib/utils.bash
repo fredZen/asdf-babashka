@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-GH_REPO="https://github.com/borkdude/babashka"
+GH_REPO="https://github.com/babashka/babashka"
 
 fail() {
   echo -e "asdf-babashka: $*"
@@ -41,7 +41,7 @@ download_release() {
     Darwin*) platform=macos ;;
   esac
 
-  url="$GH_REPO/releases/download/v$version/babashka-$version-$platform-amd64.zip"
+  url="$GH_REPO/releases/download/v$version/babashka-$version-$platform-amd64.tar.gz"
 
   echo "* Downloading babashka release $version..."
   curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -60,7 +60,7 @@ install_version() {
   (
     mkdir -p "$install_path/bin"
     download_release "$version" "$release_file"
-    unzip "$release_file" -d "$install_path/bin" || fail "Could not extract $release_file"
+    tar -xzf "$release_file" --directory "$install_path/bin" || fail "Could not extract $release_file"
     rm "$release_file"
 
     local tool_cmd
