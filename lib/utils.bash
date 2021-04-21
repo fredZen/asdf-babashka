@@ -40,12 +40,12 @@ download_release() {
     Darwin*) platform=macos ;;
   esac
 
-  >&2 echo "* Downloading babashka release $version..."
+  echo >&2 "* Downloading babashka release $version..."
 
   local ext url
   for ext in tar.gz zip; do
     url="$GH_REPO/releases/download/v$version/babashka-$version-$platform-amd64.$ext"
-    curl "${curl_opts[@]}" -o "$filename.$ext" -C - "$url" >& /dev/null && echo $ext && return
+    curl "${curl_opts[@]}" -o "$filename.$ext" -C - "$url" >&/dev/null && echo $ext && return
   done
 
   fail "Could not download $url"
