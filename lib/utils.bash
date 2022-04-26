@@ -39,7 +39,7 @@ download_release() {
     Linux*) platform=linux ;;
     Darwin*) platform=macos ;;
   esac
-  
+
   case "$(uname -m)" in
     aarch64) arch=aarch64 ;;
     x86*) arch=amd64 ;;
