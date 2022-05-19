@@ -40,10 +40,14 @@ download_release() {
     Darwin*) platform=macos ;;
   esac
 
-  case "$(uname -m)" in
-    aarch64) arch=aarch64 ;;
-    x86*) arch=amd64 ;;
-  esac
+  if [ $(uname -s) == "Darwin" ] && [ $(uname -m) == "arm64" ]; then
+    arch=amd64
+  else
+    case "$(uname -m)" in
+      aarch64) arch=aarch64 ;;
+      x86*) arch=amd64 ;;
+    esac
+  fi
 
   echo >&2 "* Downloading babashka release $version..."
 
