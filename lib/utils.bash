@@ -41,8 +41,9 @@ download_release() {
   esac
 
   case "$(uname -m)" in
-    aarch64) arch=aarch64 ;;
+    aarch64|arm64) arch=aarch64 ;;
     x86*) arch=amd64 ;;
+    *) arch=asdf_babashka_unrecognized_arch ;;
   esac
 
   echo >&2 "* Downloading babashka release $version..."
