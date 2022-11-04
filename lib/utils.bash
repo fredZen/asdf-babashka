@@ -41,6 +41,7 @@ download_release() {
   esac
 
   case "$(uname -m)" in
+    arm64) arch=aarch64 ;;
     aarch64) arch=aarch64 ;;
     x86*) arch=amd64 ;;
   esac
