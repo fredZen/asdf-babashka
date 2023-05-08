@@ -2,6 +2,7 @@
 
 set -euo pipefail
 
+
 GH_REPO="https://github.com/babashka/babashka"
 
 fail() {
